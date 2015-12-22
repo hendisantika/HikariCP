@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--  Each token will be replaced by their respective titles in the resulting page. -->
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Java Programmer</title>
+    <link th:replace="/fragments/style"/>
+  </head>
+  <body>
+    <div th:replace="/fragments/header"></div>
+    
+    <div class="container" style="margin-top:80px;">
+      <div layout:fragment="content"></div>
+    </div>
+    
+    <div th:replace="/fragments/footer"></div>
+    
+    <div th:replace="/fragments/js"></div>
+  </body>
+</html>

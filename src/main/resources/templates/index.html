@@ -1,0 +1,112 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+  <title>Spring Boot CRUD Example</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		   <div class="row">
+		      <div class="col-md-offset-3 col-md-6">
+		         
+		          <!-- Save Alert Messages -->
+			           <div th:if="${saveEmployee eq 'unsuccess'}">
+			              <div class="alert alert-danger alert-dismissible" role="alert">
+							  <strong>Error!</strong> Employee Data Not Saved.
+							</div>
+			           </div>
+			           <div th:if="${saveEmployee eq 'success'}">
+			              <div class="alert alert-success alert-dismissible" role="alert">
+							  <strong>Success!</strong> Employee Data Saved Successfully.
+							</div>
+			           </div>
+		           
+		           <!-- Deletion Alert Messages -->
+			            <div th:if="${deletion eq 'unsuccess'}">
+			              <div class="alert alert-danger alert-dismissible" role="alert">
+							  <strong>Error!</strong> Employee Data Not Deleted.
+							</div>
+			           </div>
+			           <div th:if="${deletion eq 'success'}">
+			              <div class="alert alert-success alert-dismissible" role="alert">
+							  <strong>Success!</strong> Employee Data Deleted Successfully.
+							</div>
+			           </div>
+			       
+			       <!-- Edit Alert Message -->
+			        <div th:if="${status eq 'notfound'}">
+			              <div class="alert alert-danger alert-dismissible" role="alert">
+							  <strong>Error!</strong> Invalid Employee.
+							</div>
+			           </div>
+			           <div th:if="${edit eq 'unsuccess'}">
+			              <div class="alert alert-danger alert-dismissible" role="alert">
+							  <strong>Error!</strong> Employee Data Not Edited.
+							</div>
+			           </div>
+			           <div th:if="${edit eq 'success'}">
+			              <div class="alert alert-success alert-dismissible" role="alert">
+							  <strong>Success!</strong> Employee Data Edited Successfully.
+							</div>
+			           </div>
+			           
+		          <div class="panel panel-success">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Add Employee</h3>
+					  </div>
+					     <div class="panel-body">
+					      <form th:object="${employee}" th:action="@{/employee/save}" action="#" method="post">
+					         <input type="text" th:field="*{empName}" class="form-control" placeholder="Employee Name"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="text" th:field="*{empDesignation}" class="form-control" placeholder="Employee Designation"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="text" th:field="*{empSalary}" class="form-control" placeholder="Employee Salary (000.00)"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="submit" class="btn btn-danger pull-right" value="Save">
+					       </form>
+					      </div>
+					          
+					</div>
+		      </div>
+		   </div>
+		   
+		   <div class="row"  style="margin-bottom:50px;">
+		      <div class="col-md-offset-2 col-md-8">
+		            <div class="panel panel-success">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">All Employees</h3>
+					  </div>
+					     <div class="panel-body">
+					              <table class="table table-bordered">
+									<thead>
+									   <tr class="btn-success">
+									     <th>Name</th>
+									     <th>Designation</th>
+									     <th>Salary</th>
+									     <th>Operation</th>
+									   </tr>
+									</thead>
+									<tbody>
+									     <tr th:if="${#lists.isEmpty(allEmployees)}" class="btn-warning">
+									        <td colspan="4" align="center">No Employee Registered Yet!!!</td> 
+									     </tr>
+										   <tr th:each="emp : ${allEmployees}">
+										     <td th:text="${emp.empName}"></td>
+										     <td th:text="${emp.empDesignation}"></td>
+										     <td th:text="${emp.empSalary}"></td>
+										     <td align="center">
+										        <a th:href="@{/employee/edit/{id}(id=${emp.id})}"><span class="glyphicon glyphicon-edit"></span></a> &nbsp; &nbsp;
+										        <a th:href="@{/employee/delete/{id}(id=${emp.id})}"><span class="glyphicon glyphicon-trash"></span></a>
+										     </td>
+										   </tr>
+									    
+									</tbody>
+								</table>
+					      </div>
+					          
+					</div>
+		       </div>
+		   </div>
+		</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+  <title>Spring Boot CRUD Example</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	   <div class="container">
+		   <div class="row">
+		      <div class="col-md-offset-3 col-md-6">
+		      
+		           <div th:if="${saveEmployee eq 'unsuccess'}">
+		              <div class="alert alert-danger alert-dismissible" role="alert">
+						  <strong>Error!</strong> Employee Data Not Updated.
+						</div>
+		           </div>
+		           <div th:if="${saveEmployee eq 'success'}">
+		              <div class="alert alert-success alert-dismissible" role="alert">
+						  <strong>Success!</strong> Employee Data Updated Successfully.
+						</div>
+		           </div>
+		           
+		          <div class="panel panel-success">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Edit Employee</h3>
+					  </div>
+					     <div class="panel-body">
+					       <form th:object="${editEmployee}" th:action="@{/employee/update}" action="#" method="post">
+					         <input type="hidden" th:field="*{id}"/>
+					         <input type="text" th:field="*{empName}" class="form-control" placeholder="Employee Name"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="text" th:field="*{empDesignation}" class="form-control" placeholder="Employee Designation"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="text" th:field="*{empSalary}" class="form-control" placeholder="Employee Salary (000.00)"/>
+					         <div style="clear:both; display:block;height:10px;"></div>
+					         <input type="submit" class="btn btn-danger pull-right" value="Update">
+					       </form>
+					      </div>
+					       
+					       <div class="panel-footer">
+								 <a th:href="@{/savepage}" class="btn btn-success">Back To Save Page</a>
+					       
+					         
+					       </div>  
+					</div>
+		      </div>
+		   </div>
+		
+		</div>
+	
+	</div>
+</body>
+</html>
