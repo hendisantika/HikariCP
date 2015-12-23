@@ -24,7 +24,7 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface{
 	}
 
 	@Override
-	public Boolean deleteEmployee(Long empId) {
+	public Boolean deleteEmployee(String empId) {
 		// TODO Auto-generated method stub
 		Employee temp = employeeRepository.findOne(empId);
 		if(temp!=null){
@@ -48,7 +48,7 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface{
 	}
 
 	@Override
-	public Employee findEmployee(Long empId) {
+	public Employee findEmployee(String empId) {
 		// TODO Auto-generated method stub
 		return employeeRepository.findOne(empId);
 	}

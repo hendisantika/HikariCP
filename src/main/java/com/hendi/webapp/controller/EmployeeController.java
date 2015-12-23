@@ -45,7 +45,7 @@ public class EmployeeController {
 	
 	@RequestMapping(value = "/employee/{operation}/{empId}", method = RequestMethod.GET)
 	public String editRemoveEmployee(@PathVariable("operation") String operation,
-			@PathVariable("empId") Long empId, final RedirectAttributes redirectAttributes,
+			@PathVariable("empId") String empId, final RedirectAttributes redirectAttributes,
 			Model model) {
 		if(operation.equals("delete")) {
 			if(employeeServiceInterface.deleteEmployee(empId)) {
