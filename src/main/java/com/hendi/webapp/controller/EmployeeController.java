@@ -1,19 +1,15 @@
 package com.hendi.webapp.controller;
 
 import com.hendi.webapp.domain.Employee;
-import java.util.ArrayList;
-
+import com.hendi.webapp.service.EmployeeServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hendi.webapp.service.EmployeeServiceInterface;
+import java.util.ArrayList;
 
 
 @Controller
@@ -23,7 +19,8 @@ public class EmployeeController {
 	@Autowired
 	EmployeeServiceInterface employeeServiceInterface;
 	
-	@RequestMapping(value = {"/","/savepage"}, method = RequestMethod.GET)
+//	@RequestMapping(value = {"/","/savepage"}, method = RequestMethod.GET)
+	@GetMapping("/")
 	public String savePage(Model model) {
 		model.addAttribute("employee", new Employee());
 		model.addAttribute("allEmployees", (ArrayList<Employee>)employeeServiceInterface.getAllEmployees());
@@ -40,7 +37,8 @@ public class EmployeeController {
 			redirectAttributes.addFlashAttribute("saveEmployee", "unsuccess");
 		}
 		
-		return "redirect:/savepage";
+//		return "redirect:/savepage";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/employee/{operation}/{empId}", method = RequestMethod.GET)
@@ -74,6 +72,7 @@ public class EmployeeController {
 		} else {
 			redirectAttributes.addFlashAttribute("edit", "unsuccess");
 		}
-		return "redirect:/savepage";
+//		return "redirect:/savepage";
+		return "redirect:/";
 	}
 }

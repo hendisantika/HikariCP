@@ -5,27 +5,21 @@
  */
 package com.hendi.webapp.repository;
 
-import com.hendi.webapp.SpringBootDemoApplication;
-import com.hendi.webapp.domain.Employee;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.sql.DataSource;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.sql.DataSource;
 
 /**
  *
  * @author hendi.santika
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SpringBootDemoApplication.class)
+//@SpringApplicationConfiguration(classes = SpringBootDemoApplication.class)
 @Sql(
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"/data/employee.sql"}
