@@ -19,7 +19,6 @@ public class EmployeeController {
 	@Autowired
 	EmployeeServiceInterface employeeServiceInterface;
 	
-//	@RequestMapping(value = {"/","/savepage"}, method = RequestMethod.GET)
 	@GetMapping("/")
 	public String savePage(Model model) {
 		model.addAttribute("employee", new Employee());
@@ -27,7 +26,7 @@ public class EmployeeController {
 		return "index";
 	}
 	
-	@RequestMapping(value = {"/employee/save"}, method = RequestMethod.POST)
+	@PostMapping("/employee/save")
 	public String saveEmployee(@ModelAttribute("employee") Employee employee,
 			final RedirectAttributes redirectAttributes) {
 		
@@ -37,7 +36,6 @@ public class EmployeeController {
 			redirectAttributes.addFlashAttribute("saveEmployee", "unsuccess");
 		}
 		
-//		return "redirect:/savepage";
 		return "redirect:/";
 	}
 	
@@ -61,7 +59,7 @@ public class EmployeeController {
 		  }
 		}
 		
-		return "redirect:/savepage";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/employee/update", method = RequestMethod.POST)
