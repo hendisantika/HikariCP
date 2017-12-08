@@ -1,17 +1,14 @@
 package com.hendi.webapp.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "employee")
 public class Employee {
 
-//	@Id
+    //	@Id
 //	@Column(name="id")
 //	@GeneratedValue(strategy=GenerationType.AUTO)
 //	private Long id;
