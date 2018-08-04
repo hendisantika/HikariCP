@@ -56,11 +56,14 @@
 					  </div>
 					     <div class="panel-body">
 					      <form th:object="${employee}" th:action="@{/employee/save}" action="#" method="post">
-					         <input type="text" th:field="*{empName}" class="form-control" placeholder="Employee Name"/>
+                              <input type="text" th:field="*{empName}" class="form-control" placeholder="Employee Name"
+                                     required/>
 					         <div style="clear:both; display:block;height:10px;"></div>
-					         <input type="text" th:field="*{empDesignation}" class="form-control" placeholder="Employee Designation"/>
+                              <input type="text" th:field="*{empDesignation}" class="form-control"
+                                     placeholder="Employee Designation" required/>
 					         <div style="clear:both; display:block;height:10px;"></div>
-					         <input type="text" th:field="*{empSalary}" class="form-control" placeholder="Employee Salary (000.00)"/>
+                              <input type="text" th:field="*{empSalary}" class="form-control"
+                                     placeholder="Employee Salary (000.00)" required/>
 					         <div style="clear:both; display:block;height:10px;"></div>
 					         <input type="submit" class="btn btn-danger pull-right" value="Save">
 					       </form>
