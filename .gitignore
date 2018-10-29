@@ -2,3 +2,7 @@
 /target/
 .idea/
 HikariCP.iml
+.settings/
+.classpath
+.project
+nbactions.xml
