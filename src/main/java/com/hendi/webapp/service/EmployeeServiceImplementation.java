@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
-import java.util.Optional;
 
 
 @Service
@@ -26,9 +25,9 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
     @Override
     public Boolean deleteEmployee(String empId) {
         // TODO Auto-generated method stub
-        Optional<Employee> temp = employeeRepository.findById(empId);
-        if (temp.isPresent()) {
-            employeeRepository.delete(temp.get());
+        Employee temp = employeeRepository.findOne(empId);
+        if (temp == null) {
+            employeeRepository.delete(temp);
             return true;
         }
         return false;
@@ -49,7 +48,7 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
 
     @Override
     public Employee findEmployee(String empId) {
-        return employeeRepository.findById(empId).orElseThrow(null);
+        return employeeRepository.findOne(empId);
     }
 
 
