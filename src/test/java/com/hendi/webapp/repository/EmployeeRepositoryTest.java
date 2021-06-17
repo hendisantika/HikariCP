@@ -10,7 +10,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
@@ -23,16 +25,18 @@ import java.sql.SQLException;
  * @author hendi.santika
  */
 @RunWith(SpringRunner.class)
+@SpringBootTest
 //@Sql(
 //        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
 //        scripts = {"/data/employee.sql"}
 //)
+@DataJpaTest
 public class EmployeeRepositoryTest {
 
-    @Mock
+    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Mock
+    @Autowired
     private DataSource ds;
 
 //    @After
