@@ -14,8 +14,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.22.RELEASE</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <version>2.5.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
@@ -61,6 +61,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!--?        <dependency>-->
+        <!--?            <groupId>org.springframework.boot</groupId>-->
+        <!--?            <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--?        </dependency>-->
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
             <artifactId>nekohtml</artifactId>
@@ -74,6 +78,10 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
