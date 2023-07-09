@@ -1,14 +1,23 @@
 package com.hendi.webapp.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.id.UUIDGenerator;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "employee")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Employee {
 
 //	@Id
@@ -17,48 +26,21 @@ public class Employee {
 //	private Long id;
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GenericGenerator(name = "uuid", type = UUIDGenerator.class)
     private String id;
 
-    @Column(name = "emp_name", length = 50, nullable = true)
+    @Column(name = "emp_name", length = 50)
+    @NotEmpty
+    @NotBlank
     private String empName;
 
-    @Column(name = "emp_designation", length = 50, nullable = true)
+    @Column(name = "emp_designation", length = 50)
+    @NotEmpty
+    @NotBlank
     private String empDesignation;
 
-    @Column(name = "emp_salary", nullable = true)
-    private Float empSalary;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEmpName() {
-        return empName;
-    }
-
-    public void setEmpName(String empName) {
-        this.empName = empName;
-    }
-
-    public String getEmpDesignation() {
-        return empDesignation;
-    }
-
-    public void setEmpDesignation(String empDesignation) {
-        this.empDesignation = empDesignation;
-    }
-
-    public Float getEmpSalary() {
-        return empSalary;
-    }
-
-    public void setEmpSalary(Float empSalary) {
-        this.empSalary = empSalary;
-    }
+    @Column(name = "emp_salary")
+    @Positive
+    private BigDecimal empSalary;
 
 }

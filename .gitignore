@@ -6,3 +6,7 @@ HikariCP.iml
 .classpath
 .project
 nbactions.xml
+
+#Docker
+/storage
+/docker
