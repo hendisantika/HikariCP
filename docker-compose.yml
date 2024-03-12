@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mysql
+    networks:
+      - spring-boot-app
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: exampledb
+    ports:
+      - "3307:3306"
+    networks:
+      - spring-boot-app
+      -
+  reverse-proxy:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+    networks:
+      - spring-boot-app
+networks:
+  spring-boot-app:
