@@ -8,6 +8,7 @@ services:
       - mysql
     networks:
       - spring-boot-app
+
   mysql:
     image: mysql:latest
     environment:
@@ -17,7 +18,7 @@ services:
       - "3307:3306"
     networks:
       - spring-boot-app
-      -
+
   reverse-proxy:
     image: nginx:latest
     ports:
