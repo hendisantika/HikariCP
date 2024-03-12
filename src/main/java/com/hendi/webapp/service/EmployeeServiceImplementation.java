@@ -2,10 +2,11 @@ package com.hendi.webapp.service;
 
 import com.hendi.webapp.domain.Employee;
 import com.hendi.webapp.repository.EmployeeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 
 
@@ -25,7 +26,7 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
     @Override
     public Boolean deleteEmployee(String empId) {
         // TODO Auto-generated method stub
-        Employee temp = employeeRepository.findOne(empId);
+        Employee temp = employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with ID " + empId + " Not found"));
         if (temp == null) {
             employeeRepository.delete(temp);
             return true;
@@ -48,7 +49,7 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
 
     @Override
     public Employee findEmployee(String empId) {
-        return employeeRepository.findOne(empId);
+        return employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with ID " + empId + " Not found"));
     }
 
 
