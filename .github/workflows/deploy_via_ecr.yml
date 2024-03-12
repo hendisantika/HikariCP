@@ -1,0 +1,118 @@
+name: Deploy Spring Boot App
+on:
+  push:
+    branches:
+      - master
+env:
+  ENV_GITHUB: ${{ vars.ENV_GITHUB }}
+  IMAGE_TAG: ${{ github.run_number }}
+  CONTAINER_NAME: hikaricp
+  REGISTRY: docker.io
+  IMAGE_NAME: ${{ github.actor }}/hikaricp:latest
+
+jobs:
+  project-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      - name: Set up the Maven dependencies caching
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Install Maven dependencies
+        run: mvn clean install
+
+      - name: Run tests
+        run: mvn clean --batch-mode --update-snapshots verify
+
+  push-to-ecr:
+    runs-on: ubuntu-latest
+    needs: project-build
+    env:
+      IMAGE_TAG: ${{ github.run_number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - run: docker build --tag hikaricp:$IMAGE_TAG .
+
+      - name: Push to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
+          IMAGE_TAG: ${{ github.run_number }}
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.AWS_REGION }}
+          image: hikaricp:$IMAGE_TAG
+
+  deploy:
+    needs: push-to-ecr
+    name: deploy image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+
+      - name: install ssh keys
+        # check this thread to understand why its needed:
+        # <https://stackoverflow.com/a/70447517>
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} > ~/.ssh/known_hosts
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      #        with:
+      #          registry-type: private
+
+
+      #      - name: connect and pull
+      #        env:
+      #          ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+      #          ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
+      #          IMAGE_TAG: ${{ github.run_number }}
+      #        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "cd /var/www/DALIM && export ECR_PW=`aws ecr get-login-password --region ap-southeast1 --output text | docker login --username AWS --password-stdin` && docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest && docker compose pull && docker compose up -d && exit"
+
+      - name: Docker pull & run from github
+        uses: appleboy/ssh-action@master
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+          IMAGE_TAG: ${{ github.run_number }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: ECR_REGISTRY, CONTAINER_NAME, IMAGE_TAG
+          allenvs: true
+          script: |
+            docker pull $ECR_REGISTRY/$CONTAINER_NAME:$IMAGE_TAG
+            docker system prune -af
+            docker stop hikaricp
+            docker rm hikaricp
+            docker run -d --rm --name hikaricp -p 3000:3000 $ECR_REGISTRY/$CONTAINER_NAME:$IMAGE_TAG
+
