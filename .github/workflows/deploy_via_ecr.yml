@@ -45,7 +45,6 @@ jobs:
         uses: actions/checkout@v4
 
 
-      #      - run: docker build --tag hikaricp:$IMAGE_TAG .
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -74,6 +73,8 @@ jobs:
       #            GIT_VERSION_TAG=${{ env.RELEASE_VERSION }}
       #            GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
       #            GIT_VERSION_HASH=${{ github.sha }}
+
+      - run: docker build --tag hikaricp:$IMAGE_TAG .
 
       - name: Push to ECR
         env:
