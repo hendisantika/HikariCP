@@ -60,19 +60,21 @@ jobs:
       - name: Scrape build info
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      #      - name: Build and push
-      #        uses: docker/build-push-action@v5
-      #        with:
-      #          context: .
-      #          file: Dockerfile
-      #          push: true
-      #          labels: ${{ steps.meta.outputs.labels }}
-      ##          tags: ${{secrets.AWS_ECR_REPO}}:${{ github.run_number }}
-      #          tags: 267023985114.dkr.ecr.ap-southeast-1.amazonaws.com/hikaricp:${{ github.run_number }}
-      #          build-args: |
-      #            GIT_VERSION_TAG=${{ env.RELEASE_VERSION }}
-      #            GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
-      #            GIT_VERSION_HASH=${{ github.sha }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          #          tags: hendisantika/bmi:${{ steps.meta.outputs.tags }}
+          #          tags: ${{ steps.meta.outputs.tags }}
+          #          tags: hendisantika/bmi:latest
+          tags: hendisantika/hikaricp:${{ github.run_number }}
+          build-args: |
+            GIT_VERSION_TAG=${{ env.RELEASE_VERSION }}
+            GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
+            GIT_VERSION_HASH=${{ github.sha }}
 
       - run: docker build --tag hikaricp:$IMAGE_TAG .
 
