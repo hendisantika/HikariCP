@@ -35,5 +35,5 @@ COPY --from=build /project/target/HikariCP-0.0.1.jar /app/HikariCP.jar
 WORKDIR /app
 
 RUN chown -R hendi:hendigroup /app
-EXPOSE 9000
+EXPOSE 9001
 CMD java $JAVA_OPTS -jar HikariCP.jar
