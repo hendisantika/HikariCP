@@ -44,6 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+
       #      - run: docker build --tag hikaricp:$IMAGE_TAG .
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -51,18 +52,34 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Push to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
-          IMAGE_TAG: ${{ github.run_number }}
-        id: ecr
-        uses: jwalton/gh-ecr-push@v1
+      - name: Scrape build info
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ${{ secrets.AWS_REGION }}
-          image: hikaricp:$IMAGE_TAG
+          context: .
+          file: Dockerfile
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{secrets.AWS_ECR_REPO}}/hikaricp:${{ github.run_number }}
+          build-args: |
+            GIT_VERSION_TAG=${{ env.RELEASE_VERSION }}
+            GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
+            GIT_VERSION_HASH=${{ github.sha }}
+
+  #      - name: Push to ECR
+  #        env:
+  #          ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+  #          ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
+  #          IMAGE_TAG: ${{ github.run_number }}
+  #        id: ecr
+  #        uses: jwalton/gh-ecr-push@v1
+  #        with:
+  #          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #          region: ${{ secrets.AWS_REGION }}
+  #          image: hikaricp:$IMAGE_TAG
 
   deploy:
     needs: push-to-ecr
