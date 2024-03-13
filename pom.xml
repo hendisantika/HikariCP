@@ -6,7 +6,7 @@
     <groupId>com.hendisantika.webapp</groupId>
     <artifactId>HikariCP</artifactId>
     <version>0.0.1</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>SpringBootDemoHikari</name>
     <description>Demo project for Spring Boot</description>

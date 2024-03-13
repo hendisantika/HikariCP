@@ -73,7 +73,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: install ssh keys
         # check this thread to understand why its needed:
@@ -86,16 +86,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-      #        with:
-      #          registry-type: private
-
-
-      #      - name: connect and pull
-      #        env:
-      #          ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
-      #          ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
-      #          IMAGE_TAG: ${{ github.run_number }}
-      #        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "cd /var/www/DALIM && export ECR_PW=`aws ecr get-login-password --region ap-southeast1 --output text | docker login --username AWS --password-stdin` && docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest && docker compose pull && docker compose up -d && exit"
 
       - name: Docker pull & run from github
         uses: appleboy/ssh-action@master

@@ -1,40 +1,22 @@
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
 LABEL authors="hendisantika"
-
 RUN mkdir /project
-
 COPY . /project
-
-# Passed from Github Actions
-ARG GIT_VERSION_TAG=unspecified
-ARG GIT_COMMIT_MESSAGE=unspecified
-ARG GIT_VERSION_HASH=unspecified
-
 WORKDIR /project
 
 # You can read these files for the information in your application
 RUN echo $GIT_VERSION_TAG > GIT_VERSION_TAG.txt
 RUN echo $GIT_COMMIT_MESSAGE > GIT_COMMIT_MESSAGE.txt
 RUN echo $GIT_VERSION_HASH > GIT_VERSION_HASH.txt
-
-RUN mvn clean package
-
-#FROM adoptopenjdk/openjdk21:eclipse-temurin-21-alpine
-#FROM bellsoft/liberica-openjdk-debian:21
-#FROM openjdk:21-slim
-FROM amazoncorretto:21-alpine-jdk
-LABEL maintainer="hendisantika@yahoo.co.id"
-
-RUN mkdir /app
-
-RUN addgroup -g 1001 -S hendigroup
-
-RUN adduser -S hendi -u 1001
-
-COPY --from=build /project/target/HikariCP-0.0.1.jar /app/HikariCP.jar
-
-WORKDIR /app
-
-RUN chown -R hendi:hendigroup /app
-
-CMD java $JAVA_OPTS -jar HikariCP.jar
+RUN cd /project/HikariCP && ./mvnw clean package
+#ADD hikaricp /home/myapp/hikaricp
+#RUN cd hikaricp &&  \
+RUN ./mvnw clean package
+FROM bellsoft/alpaquita-linux-base:stream-musl-230404
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+VOLUME /tmp
+WORKDIR /home/myapp
+COPY --from=builder /project/HikariCP/target .
+EXPOSE 9000
+CMD ["java", "-jar", "HikariCP-0.0.1.jar"]

@@ -76,7 +76,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile
+          file: Dockerfile2
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           #          tags: hendisantika/bmi:${{ steps.meta.outputs.tags }}
