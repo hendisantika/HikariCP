@@ -112,8 +112,8 @@ jobs:
         # <https://stackoverflow.com/a/70447517>
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.HOST }} > ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -126,9 +126,9 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
           IMAGE_TAG: ${{ github.run_number }}
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: ECR_REGISTRY, CONTAINER_NAME, IMAGE_TAG
           allenvs: true
           script: |
@@ -136,5 +136,5 @@ jobs:
             docker system prune -af
             docker stop hikaricp
             docker rm hikaricp
-            docker run -d --rm --name hikaricp -p 3000:3000 $ECR_REGISTRY/$CONTAINER_NAME:$IMAGE_TAG
+            docker run -d --rm --name hikaricp -p 9000:9000 $ECR_REGISTRY/$CONTAINER_NAME:$IMAGE_TAG
 

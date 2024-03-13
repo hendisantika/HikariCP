@@ -3,7 +3,7 @@ FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 RUN mkdir /project
 
 COPY . /project
-
+EXPOSE 9000
 # Passed from Github Actions
 ARG GIT_VERSION_TAG=unspecified
 ARG GIT_COMMIT_MESSAGE=unspecified
@@ -35,5 +35,5 @@ COPY --from=build /project/target/HikariCP-0.0.1.jar /app/HikariCP.jar
 WORKDIR /app
 
 RUN chown -R hendi:hendigroup /app
-
+EXPOSE 9000
 CMD java $JAVA_OPTS -jar HikariCP.jar
